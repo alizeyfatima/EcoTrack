@@ -3,27 +3,17 @@ from weather import get_weather
 print("------ ECOTRACK -------")
 print("Home Electricity Tracker")
 
-
-# ------------------------------------
 # Storing appliances
-# ------------------------------------
-
 appliances = []
 
 
-# ------------------------------------
-# Number of appliances
-# ------------------------------------
 
+#number of appliances
 num_appliances = int(
     input("Enter the number of appliances you want to track: ")
 )
 
-
-# ------------------------------------
-# Getting appliance information
-# ------------------------------------
-
+#getting appliance information
 for i in range(num_appliances):
 
     print(f"\nAppliance {i + 1}:")
@@ -66,21 +56,14 @@ for i in range(num_appliances):
 
     appliances.append(appliance)
 
-
-# ------------------------------------
-# Calculate total monthly usage
-# ------------------------------------
-
+#calculate total monthly usage
 total_usage = sum(
     appliance["usage"]
     for appliance in appliances
 )
 
 
-# ------------------------------------
-# Electricity bill calculation
-# ------------------------------------
-
+#electricity bill calculation
 def calculate_bill(usage):
 
     if usage <= 100:
@@ -114,14 +97,10 @@ def calculate_bill(usage):
     return bill
 
 
-# Current estimated bill
+#current estimated bill
 current_bill = calculate_bill(total_usage)
 
-
-# ------------------------------------
-# Historical electricity usage
-# ------------------------------------
-
+#historical electricity usage
 historical_usage = []
 
 print("\nEnter your previous monthly electricity usage.")
@@ -147,21 +126,13 @@ print(
     "kWh"
 )
 
-
-# ------------------------------------
-# Baseline usage
-# ------------------------------------
-
+#baseline usage
 baseline_usage = (
     historical_average
     + total_usage
 ) / 2
 
-
-# ------------------------------------
-# Get weather information
-# ------------------------------------
-
+#get weather information
 city = input("\nEnter your city: ")
 
 temperature, humidity, description = get_weather(city)
@@ -177,10 +148,7 @@ if temperature is None:
     temperature = 25
 
 
-# ------------------------------------
-# Weather effect
-# ------------------------------------
-
+#weather effect
 if temperature >= 35:
 
     weather_factor = 1.15
@@ -197,11 +165,7 @@ else:
 
     weather_factor = 0.98
 
-
-# ------------------------------------
-# Next month prediction
-# ------------------------------------
-
+#next month prediction
 predicted_usage = (
     baseline_usage
     * weather_factor
@@ -213,11 +177,7 @@ predicted_bill = calculate_bill(
     predicted_usage
 )
 
-
-# ------------------------------------
-# Display results
-# ------------------------------------
-
+#display results
 print("\n====================================")
 print("        APPLIANCE BREAKDOWN")
 print("====================================")
@@ -249,20 +209,13 @@ for appliance in appliances:
     )
 
 
-# ------------------------------------
-# Find highest consuming appliance
-# ------------------------------------
-
+#find highest consuming appliance
 highest_appliance = max(
     appliances,
     key=lambda appliance: appliance["usage"]
 )
 
-
-# ------------------------------------
-# Current results
-# ------------------------------------
-
+#current results
 print("------------------------------------")
 
 print(
@@ -288,10 +241,7 @@ print(
 )
 
 
-# ------------------------------------
-# Next month forecast
-# ------------------------------------
-
+#next month forecast
 print(
     "\n========== NEXT MONTH FORECAST =========="
 )
