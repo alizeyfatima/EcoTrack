@@ -1,3 +1,4 @@
 .env
 __pycache__/
 *.pyc
+electricity_consumption_based_weather_dataset.csv
