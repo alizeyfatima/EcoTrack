@@ -41,3 +41,15 @@ def predict_consumption(date, wind_speed, precipitation,
     prediction = model.predict(data)[0]
 
     return prediction
+
+if __name__ == "__main__":
+
+    prediction = predict_consumption(
+        "2026-08-22",
+        2.5,
+        0.0,
+        35.0,
+        27.0
+    )
+
+    print("Predicted Daily Consumption:", round(prediction, 2))
