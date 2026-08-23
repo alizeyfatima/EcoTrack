@@ -142,22 +142,37 @@ for i in range(num_appliances):
 
     with col1:
 
-       name_input = st.text_input(
+      appliance_options = [
+     "Air Conditioner",
+     "Refrigerator",
+     "Fan",
+     "Television",
+     "Washing Machine",
+     "Microwave",
+     "Electric Iron",
+     "Water Heater",
+     "Laptop",
+     "Lights",
+     "Other"
+     ]
+
+      selected_appliance = st.selectbox(
         "Appliance Name",
-        key=f"name_{i}"
-       )
+        appliance_options,
+        key=f"appliance_select_{i}"
+      )
+      if selected_appliance == "Other":
 
-       name = name_input.strip().title()
+        name = st.text_input(
+            "Enter appliance name",
+            key=f"other_appliance_{i}"
+        )
 
-      # Keep common abbreviations uppercase
-       if name.lower() == "ac":
-        name = "AC"
+      else:
 
-       elif name.lower() == "tv":
-        name = "TV"
+        name = selected_appliance
 
-       elif name.lower() == "led":
-        name = "LED"
+        name = name.strip().title()
 
     with col2:
         power = st.number_input(
