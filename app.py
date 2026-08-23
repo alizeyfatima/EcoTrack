@@ -188,6 +188,10 @@ if city:
 
 st.header("🔌 Add Your Appliances")
 
+st.caption(
+    "Enter the appliances you use and their typical daily usage."
+)
+
 num_appliances = st.number_input(
     "Number of appliances",
     min_value=1,
@@ -198,15 +202,7 @@ num_appliances = st.number_input(
 
 appliances = []
 
-for i in range(num_appliances):
-
-    st.subheader(f"Appliance {i + 1}")
-
-    col1, col2, col3, col4 = st.columns(4)
-
-    with col1:
-
-      appliance_options = [
+appliance_options = [
      "Air Conditioner",
      "Refrigerator",
      "Fan",
@@ -219,69 +215,84 @@ for i in range(num_appliances):
      "Lights",
      "Other"
      ]
+for i in range(num_appliances):
 
-      selected_appliance = st.selectbox(
-        "Appliance Name",
-        appliance_options,
-        key=f"appliance_select_{i}"
-      )
-      if selected_appliance == "Other":
+    with st.expander(
+        f"🔌 Appliance {i + 1}",
+        expanded=(i == 0)
+    ):
 
-        name = st.text_input(
-            "Enter appliance name",
-            key=f"other_appliance_{i}"
-        )
+        col1, col2, col3, col4 = st.columns(4)
 
-      else:
+        # Appliance name
+        with col1:
 
-        name = selected_appliance
+            selected_appliance = st.selectbox(
+                "Appliance",
+                appliance_options,
+                key=f"appliance_select_{i}"
+            )
 
-        name = name.strip().title()
+            if selected_appliance == "Other":
 
-    with col2:
-        power = st.number_input(
-            "Power (Watts)",
-            min_value=0,
-            value=100,
-            step=50,
-            key=f"power_{i}"
-        )
+                name = st.text_input(
+                    "Enter appliance name",
+                    key=f"other_appliance_{i}"
+                )
 
-    with col3:
-        hours = st.number_input(
-            "Hours / Day",
-            min_value=0,
-            max_value=24,
-            value=5,
-            step=1,
-            key=f"hours_{i}"
-        )
+            else:
 
-    with col4:
-        days = st.number_input(
-            "Days / Month",
-            min_value=1,
-            max_value=31,
-            value=30,
-            step=1,
-            key=f"days_{i}"
-        )
+                name = selected_appliance
 
-    # Convert watts to kilowatts
-    power_kw = power / 1000
+        # Power
+        with col2:
 
-    # Monthly electricity consumption
-    monthly_usage = power_kw * hours * days
+            power = st.number_input(
+                "Power (Watts)",
+                min_value=0,
+                value=100,
+                step=50,
+                key=f"power_{i}"
+            )
 
-    appliance = {
-        "name": name,
-        "power": power,
-        "hours": hours,
-        "days": days,
-        "usage": monthly_usage
-    }
+        # Hours
+        with col3:
 
-    appliances.append(appliance)
+            hours = st.number_input(
+                "Hours / Day",
+                min_value=0,
+                max_value=24,
+                value=5,
+                step=1,
+                key=f"hours_{i}"
+            )
+
+        # Days
+        with col4:
+
+            days = st.number_input(
+                "Days / Month",
+                min_value=1,
+                max_value=31,
+                value=30,
+                step=1,
+                key=f"days_{i}"
+            )
+
+        # Calculate monthly consumption
+        power_kw = power / 1000
+
+        monthly_usage = power_kw * hours * days
+
+        appliance = {
+            "name": name.strip().title(),
+            "power": power,
+            "hours": hours,
+            "days": days,
+            "usage": monthly_usage
+        }
+
+        appliances.append(appliance)
 
 
 # -----------------------------
@@ -329,113 +340,63 @@ def calculate_bill(usage):
 current_bill = calculate_bill(total_usage)
 
 # -----------------------------
-# KEY PERFORMANCE INDICATORS
+# ENERGY OVERVIEW
 # -----------------------------
 
-st.header("📊 Current Energy Overview")
-
+st.header("📊 Energy Overview")
 
 # Find highest consuming appliance
-
 if appliances:
-
     highest_appliance = max(
         appliances,
         key=lambda appliance: appliance["usage"]
     )
-
 else:
-
     highest_appliance = None
 
 
-# Create three columns
-
+# KPI cards
 col1, col2, col3 = st.columns(3)
 
-
 with col1:
-
     st.metric(
-        "⚡ Total Monthly Usage",
-        f"{total_usage:.2f} kWh"
+        label="⚡ Monthly Consumption",
+        value=f"{total_usage:,.1f} kWh",
+        help="Estimated electricity consumption based on your appliances."
     )
-
 
 with col2:
-
     st.metric(
-        "💰 Estimated Current Bill",
-        f"Rs. {current_bill:,.2f}"
+        label="💰 Estimated Bill",
+        value=f"Rs. {current_bill:,.0f}",
+        help="Estimated monthly electricity bill."
     )
-
 
 with col3:
-
     if highest_appliance:
-
         st.metric(
-            "🔥 Highest Consumer",
-            highest_appliance["name"]
+            label="🔥 Highest Consumer",
+            value=highest_appliance["name"],
+            help="Appliance responsible for the highest electricity usage."
         )
-
-# -----------------------------
-# BILL AT A GLANCE
-# -----------------------------
-
-st.header("💰 Bill at a Glance")
-
-bill_col1, bill_col2 = st.columns(2)
-
-
-with bill_col1:
-
-    st.metric(
-        "Estimated Current Bill",
-        f"Rs. {current_bill:,.2f}"
-    )
-
-
-with bill_col2:
-
-    if highest_appliance and total_usage > 0:
-
-        highest_percentage = (
-            highest_appliance["usage"]
-            / total_usage
-        ) * 100
-
+    else:
         st.metric(
-            "Largest Energy Consumer",
-            highest_appliance["name"],
-            f"{highest_percentage:.1f}% of usage"
+            label="🔥 Highest Consumer",
+            value="—"
         )
-        
-st.subheader("Potential Savings")
 
-if highest_appliance and highest_appliance["usage"] > 0:
 
-    potential_saving_usage = (
-        highest_appliance["usage"] * 0.10
+# Small summary underneath the cards
+if highest_appliance and total_usage > 0:
+
+    highest_percentage = (
+        highest_appliance["usage"] / total_usage
+    ) * 100
+
+    st.caption(
+        f"💡 {highest_appliance['name']} accounts for "
+        f"**{highest_percentage:.1f}%** of your estimated monthly consumption."
     )
-
-    potential_saving_bill = calculate_bill(
-        max(
-            total_usage - potential_saving_usage,
-            0
-        )
-    )
-
-    estimated_saving = (
-        current_bill - potential_saving_bill
-    )
-
-    st.metric(
-        "💚 Estimated Monthly Saving",
-        f"Rs. {estimated_saving:,.2f}",
-        "If top appliance usage is reduced by 10%"
-    )
-
 # -----------------------------
 # APPLIANCE BREAKDOWN
 # -----------------------------
