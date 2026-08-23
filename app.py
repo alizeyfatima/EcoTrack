@@ -35,7 +35,7 @@ st.markdown("""
 
     /* Main headings */
     h1 {
-        font-size: 3.2rem !important;
+        font-size: 2.8rem !important;
         font-weight: 700 !important;
         text-align: center;
         margin-bottom: 0rem !important;
@@ -149,6 +149,26 @@ with st.sidebar:
 # -----------------------------
 # HEADER
 # -----------------------------
+st.markdown(
+    """
+    <div style="
+        text-align: center;
+        margin-bottom: 0.4rem;
+    ">
+        <span style="
+            background-color: #183B22;
+            color: #81C784;
+            padding: 0.35rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        ">
+            ⚡ SMART ENERGY DASHBOARD
+        </span>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
 st.markdown(
     "<h1>🌱 EcoTrack</h1>",
@@ -175,19 +195,40 @@ st.markdown(
     <p style="
         text-align: center;
         font-size: 1rem;
-        color: #7D8590;
-        max-width: 750px;
-        margin: 0 auto 0.8rem auto;
+        color: #8B949E;
+        max-width: 650px;
+        margin: 0 auto 1.2rem auto;
+        line-height: 1.6;
     ">
-        Monitor your household electricity consumption,
-        understand your energy usage, and forecast your
-        future electricity bill using usage and weather data.
+        Track your electricity usage, estimate your monthly bill,
+        and predict future consumption with weather-aware analytics.
     </p>
     """,
     unsafe_allow_html=True
 )
 
 st.divider()
+
+#rows
+st.markdown(
+    """
+    <div style="
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        margin: 0.8rem 0 1.5rem 0;
+        color: #A8B3C2;
+        font-size: 0.85rem;
+    ">
+        <span>⚡ Usage Tracking</span>
+        <span>•</span>
+        <span>💰 Bill Estimation</span>
+        <span>•</span>
+        <span>🤖 AI Forecasting</span>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
 # -----------------------------
 # WEATHER
