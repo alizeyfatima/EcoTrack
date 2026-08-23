@@ -121,19 +121,21 @@ with st.sidebar:
 
     st.divider()
 
-    st.markdown("### 📍 Dashboard")
+    st.markdown("### 📍 Navigation")
 
-    st.markdown("""
-    **Sections**
-    
-    🌤️ Weather  
-    🔌 Appliances  
-    📊 Energy Overview  
-    📈 Analytics  
-    🔮 Forecast  
-    🤖 AI Prediction  
-    💡 Insights
-    """)
+    page = st.radio(
+        "Go to",
+        [
+            "🌤️ Weather",
+            "🔌 Appliances",
+            "📊 Energy Overview",
+            "📈 Analytics",
+            "🔮 Forecast",
+            "💡 Insights",
+            "🤖 AI Prediction"
+        ],
+        label_visibility="collapsed"
+    )
 
     st.divider()
 
