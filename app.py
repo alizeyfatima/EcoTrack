@@ -8,69 +8,133 @@ import plotly.express as px
 st.set_page_config(
     page_title="EcoTrack",
     page_icon="🌱",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
+
+
+# -----------------------------
+# CUSTOM STYLING
+# -----------------------------
 
 st.markdown("""
 <style>
 
-.block-container {
-    padding-top: 2rem;
-    padding-bottom: 3rem;
-}
+    /* Main background */
+    .stApp {
+        background-color: #0E1117;
+    }
 
-.stApp {
-    background-color: #0E1117;
-}
+    /* Main content spacing */
+    .block-container {
+        padding-top: 2rem;
+        padding-bottom: 4rem;
+        max-width: 1400px;
+    }
 
-p, label, .stMarkdown {
-    color: #E8E8E8;
-}
+    /* Main headings */
+    h1 {
+        font-size: 3.2rem !important;
+        font-weight: 700 !important;
+        text-align: center;
+        margin-bottom: 0.2rem !important;
+    }
 
-h1 {
-    text-align: center !important;
-    font-size: 3.2rem !important;
-    font-weight: 700 !important;
-}
+    h2 {
+        font-size: 1.8rem !important;
+        font-weight: 600 !important;
+        margin-top: 2rem !important;
+    }
 
-h2, h3 {
-    color: #FFFFFF;
-}
+    h3 {
+        font-size: 1.3rem !important;
+        font-weight: 600 !important;
+    }
 
-h2 {
-    margin-top: 2rem !important;
-}
+    /* Text */
+    p, label, .stMarkdown {
+        color: #E8E8E8;
+    }
 
-h3 {
-    margin-top: 1rem !important;
-}
+    /* Metric cards */
+    [data-testid="stMetric"] {
+        background-color: #161B22;
+        border: 1px solid #30363D;
+        padding: 1.2rem;
+        border-radius: 12px;
+    }
+
+    [data-testid="stMetricLabel"] {
+        color: #A8B3C2 !important;
+    }
+
+    [data-testid="stMetricValue"] {
+        color: #FFFFFF !important;
+        font-weight: 700 !important;
+    }
+
+    /* Buttons */
+    .stButton > button {
+        border-radius: 8px;
+        border: 1px solid #2E7D32;
+        padding: 0.5rem 1.2rem;
+        font-weight: 600;
+    }
+
+    /* Input boxes */
+    .stTextInput input,
+    .stNumberInput input {
+        border-radius: 8px;
+    }
+
+    /* Dividers */
+    hr {
+        border-color: #30363D;
+    }
 
 </style>
 """, unsafe_allow_html=True)
 
-# TITLE
+# -----------------------------
+# HEADER
+# -----------------------------
+
 st.markdown(
     "<h1>🌱 EcoTrack</h1>",
     unsafe_allow_html=True
 )
 
 st.markdown(
-    "<p style='text-align:center; font-size:20px;'>"
-    "Smart Home Electricity Tracker & Bill Forecaster"
-    "</p>",
+    """
+    <p style="
+        text-align: center;
+        font-size: 1.25rem;
+        color: #A8B3C2;
+        margin-top: 0;
+    ">
+        Smart Home Electricity Tracker & Bill Forecaster
+    </p>
+    """,
     unsafe_allow_html=True
 )
 
 st.markdown(
     """
-    <p style="text-align:center; font-size:18px;">
-    Monitor your household electricity consumption,
-    understand where your energy is going, and forecast
-    your next electricity bill using historical usage and weather data.
+    <p style="
+        text-align: center;
+        font-size: 1rem;
+        color: #7D8590;
+        max-width: 750px;
+        margin: 0 auto 2rem auto;
+    ">
+        Monitor your household electricity consumption,
+        understand your energy usage, and forecast your
+        future electricity bill using usage and weather data.
     </p>
     """,
     unsafe_allow_html=True
 )
+
 st.divider()
 
 # -----------------------------
