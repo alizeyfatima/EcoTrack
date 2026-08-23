@@ -644,11 +644,15 @@ baseline_usage = (
 # WEATHER EFFECT
 # -----------------------------
 
-if temperature >= 35:
+if temperature is None:
+
+    weather_factor = 1.0
+    
+elif temperature >= 35:
 
     weather_factor = 1.15
 
-elif temperature >= 30:
+elif temperature >= 30: 
 
     weather_factor = 1.08
 
@@ -675,104 +679,119 @@ predicted_bill = calculate_bill(predicted_usage)
 # FORECAST RESULTS
 # -----------------------------
 
-st.write(
-    "EcoTrack combines your recent electricity usage, "
-    "current appliance consumption, and weather conditions "
-    "to estimate your electricity usage for next month."
+st.header("🔮 Next Month Forecast")
+
+st.caption(
+    "Estimate your next month's electricity consumption and bill "
+    "using recent usage and local weather conditions."
 )
 
 
-# Forecast metrics
-col1, col2, col3 = st.columns(3)
+# -----------------------------
+# FORECAST SUMMARY
+# -----------------------------
 
+forecast_col1, forecast_col2, forecast_col3 = st.columns(3)
 
-with col1:
-
+with forecast_col1:
     st.metric(
         "📚 Historical Average",
-        f"{historical_average:.2f} kWh"
+        f"{historical_average:,.1f} kWh"
     )
 
-
-with col2:
+with forecast_col2:
 
     usage_change = (
-        (predicted_usage - total_usage)
-        / total_usage * 100
+        (predicted_usage - total_usage) / total_usage * 100
         if total_usage > 0
         else 0
     )
 
     st.metric(
         "⚡ Predicted Usage",
-        f"{predicted_usage:.2f} kWh",
+        f"{predicted_usage:,.1f} kWh",
         f"{usage_change:+.1f}% vs current"
     )
 
+with forecast_col3:
 
-with col3:
-
-    bill_change = (
-        predicted_bill - current_bill
-    )
+    bill_change = predicted_bill - current_bill
 
     st.metric(
         "💰 Predicted Bill",
-        f"Rs. {predicted_bill:,.2f}",
-        f"Rs. {bill_change:+,.2f}"
+        f"Rs. {predicted_bill:,.0f}",
+        f"Rs. {bill_change:+,.0f}"
     )
 
 
-# Forecast details
-st.subheader("Forecast Details")
+# -----------------------------
+# FORECAST DETAILS
+# -----------------------------
 
-forecast_col1, forecast_col2 = st.columns(2)
+st.subheader("📋 Forecast Details")
+
+detail_col1, detail_col2 = st.columns(2)
+
+with detail_col1:
+
+    st.markdown("### ⚡ Usage")
+
+    st.write(
+        f"**Current Usage:** {total_usage:,.1f} kWh"
+    )
+
+    st.write(
+        f"**Historical Average:** {historical_average:,.1f} kWh"
+    )
+
+    st.write(
+        f"**Baseline Usage:** {baseline_usage:,.1f} kWh"
+    )
+
+with detail_col2:
+
+    st.markdown("### 🌤️ Weather Impact")
+
+    st.write(
+        f"**Expected Temperature:** {temperature:.1f} °C"
+    )
+
+    st.write(
+        f"**Weather Condition:** {description.title()}"
+    )
+
+    st.write(
+        f"**Weather Adjustment:** "
+        f"{(weather_factor - 1) * 100:+.0f}%"
+    )
 
 
-with forecast_col1:
+# -----------------------------
+# FORECAST MESSAGE
+# -----------------------------
 
-    st.write("**Current Usage:**")
-    st.write(f"{total_usage:.2f} kWh")
-
-    st.write("**Historical Average:**")
-    st.write(f"{historical_average:.2f} kWh")
-
-    st.write("**Baseline Usage:**")
-    st.write(f"{baseline_usage:.2f} kWh")
-
-
-with forecast_col2:
-
-    st.write("**Expected Temperature:**")
-    st.write(f"{temperature:.1f} °C")
-
-    st.write("**Weather Condition:**")
-    st.write(description.title())
-
-    st.write("**Weather Adjustment:**")
-    st.write(f"{(weather_factor - 1) * 100:+.0f}%")
-
-
-# Forecast explanation
 if predicted_usage > total_usage:
 
     st.warning(
-        "⚠️ EcoTrack predicts higher electricity consumption "
-        "next month. Hotter weather may increase cooling demand."
+        "⚠️ **Higher consumption expected** — "
+        "EcoTrack predicts increased electricity usage next month. "
+        "Hotter weather may increase cooling demand."
     )
 
 elif predicted_usage < total_usage:
 
     st.success(
-        "🌱 EcoTrack predicts lower electricity consumption "
+        "🌱 **Lower consumption expected** — "
+        "EcoTrack predicts electricity usage will decrease "
         "next month based on current usage and weather conditions."
     )
 
 else:
 
     st.info(
-        "ℹ️ EcoTrack predicts electricity consumption "
-        "to remain approximately the same next month."
+        "ℹ️ **Stable consumption expected** — "
+        "EcoTrack predicts electricity usage will remain "
+        "approximately the same next month."
     )
 # -----------------------------
 # ENERGY INSIGHTS
@@ -866,46 +885,69 @@ st.info(
 # MACHINE LEARNING FORECAST
 # -----------------------------
 
-st.header("🤖 Machine Learning Forecast")
+st.header("🤖 AI Consumption Forecast")
 
-st.write(
-    "EcoTrack uses a Random Forest machine-learning model "
+st.caption(
+    "Use the Random Forest model to estimate daily electricity"
+    "consumption based on forecast weather conditions."
+)
+
+# -----------------------------
+# MODEL INFORMATION
+# -----------------------------
+
+st.info(
+    "🌱 **EcoTrack AI** uses a Random Forest regression model "
     "trained on historical electricity consumption and weather data."
 )
 
-st.subheader("Enter Forecast Weather Conditions")
+
+# -----------------------------
+# WEATHER INPUTS
+# -----------------------------
+
+st.subheader("🌤️ Forecast Weather Conditions")
 
 ml_col1, ml_col2, ml_col3, ml_col4 = st.columns(4)
 
 with ml_col1:
+
     ml_wind = st.number_input(
-        "Wind Speed",
+        "💨 Wind Speed",
         min_value=0.0,
         value=2.5,
         step=0.1
     )
 
 with ml_col2:
+
     ml_rain = st.number_input(
-        "Precipitation",
+        "🌧️ Precipitation",
         min_value=0.0,
         value=0.0,
         step=0.1
     )
 
 with ml_col3:
+
     ml_max_temp = st.number_input(
-        "Maximum Temperature °C",
+        "🌡️ Maximum Temperature",
         value=35.0,
         step=0.5
     )
 
 with ml_col4:
+
     ml_min_temp = st.number_input(
-        "Minimum Temperature °C",
+        "🌡️ Minimum Temperature",
         value=27.0,
         step=0.5
     )
+
+
+# -----------------------------
+# ML PREDICTION
+# -----------------------------
 
 ml_prediction = predict_consumption(
     "2026-08-22",
@@ -915,13 +957,70 @@ ml_prediction = predict_consumption(
     ml_min_temp
 )
 
-st.metric(
-    "🤖 ML Predicted Daily Consumption",
-    f"{ml_prediction:.2f}"
-)
 
-st.info(
-    "This prediction is generated by EcoTrack's "
-    "Random Forest regression model using historical "
-    "electricity and weather data."
+# -----------------------------
+# PREDICTION RESULT
+# -----------------------------
+
+st.subheader("📊 AI Prediction")
+
+prediction_col1, prediction_col2, prediction_col3 = st.columns(3)
+
+with prediction_col1:
+
+    st.metric(
+        "🤖 Predicted Daily Consumption",
+        f"{ml_prediction:.2f}"
+    )
+
+with prediction_col2:
+
+    st.metric(
+        "🌡️ Maximum Temperature",
+        f"{ml_max_temp:.1f} °C"
+    )
+
+with prediction_col3:
+
+    st.metric(
+        "💨 Wind Speed",
+        f"{ml_wind:.1f}"
+    )
+
+
+# -----------------------------
+# MODEL SUMMARY
+# -----------------------------
+
+st.markdown("---")
+
+summary_col1, summary_col2 = st.columns(2)
+
+with summary_col1:
+
+    st.markdown("### 🧠 Model")
+
+    st.write("**Algorithm:** Random Forest Regression")
+
+    st.write(
+        "**Purpose:** Predict daily electricity consumption"
+    )
+
+with summary_col2:
+
+    st.markdown("### 🌤️ Inputs")
+
+    st.write(
+        "**Weather:** Wind, precipitation, maximum temperature, "
+        "and minimum temperature"
+    )
+
+    st.write(
+        "**Output:** Predicted electricity consumption"
+    )
+
+
+st.caption(
+    "The ML prediction is an estimate generated by EcoTrack's "
+    "Random Forest regression model."
 )
