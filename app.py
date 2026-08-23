@@ -38,7 +38,7 @@ st.markdown("""
         font-size: 3.2rem !important;
         font-weight: 700 !important;
         text-align: center;
-        margin-bottom: 0.2rem !important;
+        margin-bottom: 0rem !important;
     }
 
     h2 {
@@ -121,7 +121,7 @@ with st.sidebar:
 
     st.divider()
 
-    st.markdown("### 📍 Navigation")
+    st.markdown("### 📍 Dashboard")
 
     st.markdown("""
       **Sections**
@@ -161,7 +161,8 @@ st.markdown(
         text-align: center;
         font-size: 1.25rem;
         color: #A8B3C2;
-        margin-top: 0;
+        margin-top: -0.2rem;
+        margin-bottom:0.5rem;
     ">
         Smart Home Electricity Tracker & Bill Forecaster
     </p>
@@ -176,7 +177,7 @@ st.markdown(
         font-size: 1rem;
         color: #7D8590;
         max-width: 750px;
-        margin: 0 auto 2rem auto;
+        margin: 0 auto 0.8rem auto;
     ">
         Monitor your household electricity consumption,
         understand your energy usage, and forecast your
