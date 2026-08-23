@@ -150,27 +150,6 @@ with st.sidebar:
 # HEADER
 # -----------------------------
 st.markdown(
-    """
-    <div style="
-        text-align: center;
-        margin-bottom: 0.4rem;
-    ">
-        <span style="
-            background-color: #183B22;
-            color: #81C784;
-            padding: 0.35rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        ">
-            ⚡ SMART ENERGY DASHBOARD
-        </span>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
-
-st.markdown(
     "<h1>🌱 EcoTrack</h1>",
     unsafe_allow_html=True
 )
