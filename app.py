@@ -403,6 +403,10 @@ if highest_appliance and total_usage > 0:
 
 st.header("🔌 Appliance Breakdown")
 
+st.caption(
+    "See how each appliance contributes to your household's monthly electricity consumption."
+)
+
 breakdown_data = []
 
 for appliance in appliances:
@@ -418,8 +422,9 @@ for appliance in appliances:
         "Appliance": appliance["name"],
         "Power (W)": appliance["power"],
         "Hours / Day": appliance["hours"],
-        "Monthly Usage (kWh)": round(appliance["usage"], 2),
-        "Usage Share (%)": round(percentage, 1)
+        "Days / Month": appliance["days"],
+        "Monthly Usage (kWh)": appliance["usage"],
+        "Usage Share (%)": percentage
     })
 
 
@@ -428,18 +433,51 @@ breakdown_df = pd.DataFrame(breakdown_data)
 st.dataframe(
     breakdown_df,
     use_container_width=True,
-    hide_index=True
+    hide_index=True,
+    column_config={
+       "Appliance": st.column_config.TextColumn(
+            "Appliance",
+            width="medium"
+        ),
+
+        "Power (W)": st.column_config.NumberColumn(
+            "Power",
+            format="%d W"
+        ),
+
+        "Hours / Day": st.column_config.NumberColumn(
+            "Hours / Day",
+            format="%.0f"
+        ),
+
+        "Days / Month": st.column_config.NumberColumn(
+            "Days / Month",
+            format="%.0f"
+        ),
+
+        "Monthly Usage (kWh)": st.column_config.NumberColumn(
+            "Monthly Usage",
+            format="%.1f kWh"
+        ),
+
+        "Usage Share (%)": st.column_config.ProgressColumn(
+            "Usage Share",
+            format="%.1f%%",
+            min_value=0,
+            max_value=100
+        )
+    }
 )
 
 
 # -----------------------------
 # CHARTS
 # -----------------------------
+st.header("📈 Energy Analytics")
 
-import pandas as pd
-import matplotlib.pyplot as plt
-
-st.header("📈 Energy Consumption Charts")
+st.caption(
+    "Visualize which appliances are driving your electricity consumption."
+)
 
 # Create data for charts
 chart_data = pd.DataFrame({
@@ -451,119 +489,120 @@ chart_data = pd.DataFrame({
 })
 
 chart_col1, chart_col2 = st.columns(2)
+
+#bar chart
 with chart_col1:
 
-    st.subheader("⚡ Electricity Consumption")
+    st.subheader("⚡ Monthly Consumption")
     
     bar_fig = px.bar(
-    chart_data,
-    x="Appliance",
-    y="Usage",
-    text="Usage",
-    color="Appliance",
-    color_discrete_sequence=[
-        "#2E7D32",
-        "#43A047",
-        "#66BB6A",
-        "#81C784",
-        "#A5D6A7",
-        "#26A69A",
-        "#00897B"
-    ]
- )
+        chart_data,
+        x="Appliance",
+        y="Usage",
+        text="Usage"
+    )
 
     bar_fig.update_traces(
-    texttemplate="%{text:.1f} kWh",
-    textposition="outside"
+        texttemplate="%{text:.1f} kWh",
+        textposition="outside",
+        marker_color="#43A047",
+        hovertemplate=(
+            "<b>%{x}</b><br>"
+            "Usage: %{y:.1f} kWh"
+            "<extra></extra>"
+        )
     )
 
     bar_fig.update_layout(
-    showlegend=False,
-    xaxis_title="Appliance",
-    yaxis_title="Monthly Usage (kWh)",
+        showlegend=False,
 
-    plot_bgcolor="#0E1117",
-    paper_bgcolor="#0E1117",
+        xaxis_title=None,
+        yaxis_title="Monthly Usage (kWh)",
 
-    font=dict(
-        color="#FFFFFF"
-    ),
+        plot_bgcolor="rgba(0,0,0,0)",
+        paper_bgcolor="rgba(0,0,0,0)",
 
-    xaxis=dict(
-        color="#FFFFFF",
-        gridcolor="#252A34"
-    ),
+        font=dict(
+            color="#E8E8E8"
+        ),
 
-    yaxis=dict(
-        color="#FFFFFF",
-        gridcolor="#252A34"
-    ),
+        xaxis=dict(
+            showgrid=False
+        ),
 
-    margin=dict(
-        t=40,
-        l=20,
-        r=20,
-        b=20
+        yaxis=dict(
+            gridcolor="#30363D"
+        ),
+
+        margin=dict(
+            t=30,
+            l=10,
+            r=10,
+            b=10
+        )
     )
-  )
+
     st.plotly_chart(
-    bar_fig,
-    use_container_width=True
+        bar_fig,
+        use_container_width=True
     )
- 
+
+
+# -----------------------------
+# DONUT CHART
+# -----------------------------
 
 with chart_col2:
 
     st.subheader("🥧 Energy Distribution")
 
     pie_fig = px.pie(
-    chart_data,
-    names="Appliance",
-    values="Usage",
-    hole=0.45,
-    color_discrete_sequence=[
-        "#2E7D32",
-        "#43A047",
-        "#66BB6A",
-        "#81C784",
-        "#A5D6A7",
-        "#26A69A",
-        "#00897B"
-    ]
+        chart_data,
+        names="Appliance",
+        values="Usage",
+        hole=0.55
     )
 
     pie_fig.update_traces(
-    textposition="inside",
-    textinfo="percent+label"
+        textposition="inside",
+        textinfo="percent",
+        hovertemplate=(
+            "<b>%{label}</b><br>"
+            "Usage: %{value:.1f} kWh<br>"
+            "Share: %{percent}"
+            "<extra></extra>"
+        )
     )
 
     pie_fig.update_layout(
-    showlegend=True,
+        showlegend=True,
 
-    plot_bgcolor="#0E1117",
-    paper_bgcolor="#0E1117",
+        plot_bgcolor="rgba(0,0,0,0)",
+        paper_bgcolor="rgba(0,0,0,0)",
 
-    font=dict(
-        color="#FFFFFF"
-    ),
-
-    legend=dict(
         font=dict(
-            color="#FFFFFF"
-        )
-    ),
+            color="#E8E8E8"
+        ),
 
-    margin=dict(
-        t=30,
-        l=20,
-        r=20,
-        b=20
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=-0.25,
+            xanchor="center",
+            x=0.5
+        ),
+
+        margin=dict(
+            t=20,
+            l=10,
+            r=10,
+            b=40
+        )
     )
- )
 
     st.plotly_chart(
-    pie_fig,
-    use_container_width=True
+        pie_fig,
+        use_container_width=True
     )
 
 # -----------------------------
