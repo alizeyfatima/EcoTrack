@@ -547,6 +547,17 @@ with chart_col1:
 
     st.subheader("⚡ Monthly Consumption")
     
+    eco_colors = [
+    "#43A047",
+    "#66BB6A",
+    "#81C784",
+    "#A5D6A7",
+    "#2E7D32",
+    "#1B5E20",
+    "#388E3C",
+    "#4CAF50"
+    ]
+    
     bar_fig = px.bar(
         chart_data,
         x="Appliance",
@@ -618,6 +629,9 @@ with chart_col2:
     pie_fig.update_traces(
         textposition="inside",
         textinfo="percent",
+        marker=dict(
+          colors=eco_colors[:len(chart_data)]
+        ),
         hovertemplate=(
             "<b>%{label}</b><br>"
             "Usage: %{value:.1f} kWh<br>"
